@@ -448,6 +448,173 @@
   }
   .signoff strong { font-weight: 600; }
 
+  /* ---------- CALL LIST (live) ---------- */
+  .prospect-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .filter-pill {
+    background: transparent;
+    border: 1px solid var(--border-2);
+    color: var(--muted-strong);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    min-height: 36px;
+    line-height: 1;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .filter-pill:hover { color: var(--text); border-color: var(--text); }
+  .filter-pill[aria-pressed="true"] {
+    background: var(--text);
+    color: var(--cover-text);
+    border-color: var(--text);
+  }
+  .filter-count {
+    font-weight: 400;
+    opacity: .65;
+    margin-left: 4px;
+  }
+  .prospect-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .prospect {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 24px;
+    row-gap: 8px;
+    align-items: baseline;
+  }
+  .prospect:last-child { border-bottom: none; }
+  .prospect-name {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.25;
+    letter-spacing: -.005em;
+    grid-column: 1;
+  }
+  .prospect-rating {
+    font-size: 13px;
+    color: var(--muted-strong);
+    font-variant-numeric: tabular-nums;
+    grid-column: 2;
+    white-space: nowrap;
+    align-self: start;
+    padding-top: 3px;
+  }
+  .prospect-rating .star { color: var(--accent); margin-right: 2px; }
+  .prospect-rating .reviews { color: var(--muted); }
+  .prospect-meta-row {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+  }
+  .prospect-spec {
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .prospect-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 18px;
+    margin-top: 2px;
+  }
+  .prospect-phone {
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 0;
+    letter-spacing: .01em;
+  }
+  .prospect-phone:hover { color: var(--accent); }
+  .prospect-site {
+    font-size: 13px;
+    color: var(--muted-strong);
+    text-decoration: none;
+    padding: 4px 0;
+  }
+  .prospect-site:hover { color: var(--accent); }
+  .prospect-site::after { content: " ↗"; opacity: .55; }
+  .prospect-tp {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+  .prospect-tp summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    list-style: none;
+    padding: 4px 0;
+    display: inline-block;
+  }
+  .prospect-tp summary::-webkit-details-marker { display: none; }
+  .prospect-tp summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 6px;
+    transition: transform .15s ease;
+  }
+  .prospect-tp[open] summary::before { transform: rotate(90deg); }
+  .prospect-tp p {
+    margin: 6px 0 4px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--muted-strong);
+    max-width: 68ch;
+  }
+  .prospect-empty {
+    font-size: 14px;
+    color: var(--muted);
+    padding: 32px 0;
+    text-align: center;
+    font-style: italic;
+  }
+  .prospect-footer {
+    margin-top: 18px;
+    font-size: 12.5px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .prospect-footer strong { color: var(--muted-strong); font-weight: 600; }
+  .prospect-fulllink {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .prospect-fulllink:hover { text-decoration: underline; }
+
   /* ---------- PRINT ---------- */
   @media print {
     .toc { display: none; }
@@ -491,6 +658,13 @@
 
     .script-role { width: 48px; font-size: 9.5px; }
     .script-text { font-size: 14px; }
+
+    /* Prospect list on mobile */
+    .prospect-name { font-size: 17px; }
+    .prospect-rating { font-size: 12.5px; padding-top: 2px; }
+    .prospect-phone { font-size: 15px; }
+    .filter-pill { padding: 9px 14px; min-height: 40px; font-size: 12px; }
+    .prospect-footer { font-size: 12px; }
   }
 </style>
 </head>
@@ -525,6 +699,7 @@
 <nav class="toc" id="toc" aria-label="Sections">
   <a class="toc-item" href="#section-what" aria-current="true">What We Sell</a>
   <a class="toc-item" href="#section-who">Who to Call</a>
+  <a class="toc-item" href="#section-call-list">Call List</a>
   <a class="toc-item" href="#section-script">Your Script</a>
   <a class="toc-item" href="#section-objections">Objections</a>
   <a class="toc-item" href="#section-flow">Call Flow</a>
@@ -676,10 +851,100 @@
     <p class="prose"><strong>How to find the right person to ask for.</strong> You usually reach a front desk person or office manager first. Ask for whoever handles marketing decisions. That's usually the practice owner, the physician, or an office manager with that authority. Ask: <em>"Who handles your marketing and business development?"</em></p>
   </section>
 
-  <!-- 3. SCRIPT -->
-  <section id="section-script" aria-labelledby="h-script">
+  <!-- 03. CALL LIST (live from Airtable) -->
+  <section id="section-call-list" aria-labelledby="h-call-list">
     <div class="section-header">
       <div class="section-num">03</div>
+      <h2 class="section-title" id="h-call-list">Your Call List</h2>
+    </div>
+
+    <div class="note accent">
+      <div class="note-eyebrow">Live from Airtable</div>
+      <p class="note-body">The top 60 Verve prospects, scored by rating and review volume. Tap a phone number to dial. Specialty filter below.</p>
+    </div>
+
+    <div class="prospect-filters" role="group" aria-label="Filter by specialty">
+        <button type="button" class="filter-pill" data-spec="all" aria-pressed="true">All <span class="filter-count">60</span></button>
+        <button type="button" class="filter-pill" data-spec="longevity" aria-pressed="false">Longevity <span class="filter-count">12</span></button>
+        <button type="button" class="filter-pill" data-spec="aesthetic" aria-pressed="false">Aesthetic <span class="filter-count">27</span></button>
+        <button type="button" class="filter-pill" data-spec="mixed" aria-pressed="false">Mixed <span class="filter-count">21</span></button>
+    </div>
+
+    <ol class="prospect-list" id="prospect-list">
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">St. George Med Spa</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(447)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14354140722">(435) 414-0722</a><a class="prospect-site" href="https://www.stgeorgemedspa.com/" target="_blank" rel="noopener noreferrer">www.stgeorgemedspa.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Align Spa | Align Elevated</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(486)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Park City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14356479300">(435) 647-9300</a><a class="prospect-site" href="https://alignspa.com/index.html" target="_blank" rel="noopener noreferrer">alignspa.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Nuance Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(423)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18015575200">(801) 557-5200</a><a class="prospect-site" href="https://nuanceaesthetics.com/" target="_blank" rel="noopener noreferrer">nuanceaesthetics.com</a></div><details class="prospect-tp"><summary>Talking points</summary><p>Premier medical spa in Salt Lake City offering injectables, laser treatments, CoolSculpting, HydraFacial, hormone therapy, and medical-grade skincare for men and women.<br><br>- Founded July 2015 by Dr. Rhudy (Medical Director/Owner) and Jill Miller (Co-Owner/Practice Manager) with combined 20+ years in medical aesthetics<br>- Partners with industry leaders Allergan, Galderma, and Sciton for procedures and products<br>- Offers hormone therapy and BHRT alongside aesthetic treatments—differentiator from typical medspa<br>- HydraFacial and exosome treatments prominently featured in recent social content, indicating active promotion of newer technologies<br>- Located in Salt Lake City with strong local reputation; phone (801) 557-5200</p></details></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">RUMA Medical</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(411)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18015147650">(801) 514-7650</a><a class="prospect-site" href="https://ruma.com/" target="_blank" rel="noopener noreferrer">ruma.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Beautiful U Spa and Property Holdings</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(422)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13854383909">(385) 438-3909</a><a class="prospect-site" href="https://beautifulumedspa.com/" target="_blank" rel="noopener noreferrer">beautifulumedspa.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Spa Trouve</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(422)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14355383072">(435) 538-3072</a><a class="prospect-site" href="https://spatrouve.com/med-spa-st-george-utah/" target="_blank" rel="noopener noreferrer">spatrouve.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Total Health Chiropractic</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(370)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Ogden, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18016212541">(801) 621-2541</a><a class="prospect-site" href="https://www.ogdenchiropractor.net/" target="_blank" rel="noopener noreferrer">www.ogdenchiropractor.net</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Forever Beauty Med Spa</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(393)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13856668656">(385) 666-8656</a><a class="prospect-site" href="http://foreverbeautyspa.com/?utm_source=google&amp;utm_medium=organic&amp;utm_campaign=gbp" target="_blank" rel="noopener noreferrer">foreverbeautyspa.com</a></div><details class="prospect-tp"><summary>Talking points</summary><p>Medical spa in Salt Lake City offering injectables, advanced facials, body treatments, and micropigmentation services with personalized treatment plans.<br><br>- Offers Morpheus8 for both facial and body treatments, plus HIFU for face and body<br>- Provides HydraFacial and chemical peels alongside microneedling with PRP options<br>- Specializes in micropigmentation services: eyebrow microblading, lip blush, and eyeliner tattooing<br>- Dermal fillers start at $750; neuromodulators $10-14; eyebrow micropigmentation $299<br>- Located in Salt Lake City with online booking and self-assessment available</p></details></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Provo Dermatology Med Spa &amp; Surgical Center</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(333)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13854752116">(385) 475-2116</a><a class="prospect-site" href="http://springvillederm.com/" target="_blank" rel="noopener noreferrer">springvillederm.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Vyla Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(323)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Park City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14356595968">(435) 659-5968</a><a class="prospect-site" href="https://vylaaesthetics.com/" target="_blank" rel="noopener noreferrer">vylaaesthetics.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Optimal Health Family Practice &amp; Medspa</h3><div class="prospect-rating"><span class="star">★</span> 4.8 <span class="reviews">(386)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18018775801">(801) 877-5801</a><a class="prospect-site" href="https://optimalhealthfamilypractice.com/?utm_source=google&amp;utm_medium=organic&amp;utm_campaign=gbp" target="_blank" rel="noopener noreferrer">optimalhealthfamilypractice.com</a></div><details class="prospect-tp"><summary>Talking points</summary><p>Provo-based medical spa and functional medicine practice offering hormone optimization, regenerative aesthetics, and root-cause wellness care for longevity and natural beauty.<br><br>- Specializes in bioidentical hormone replacement therapy and pellet hormone therapy for perimenopause, menopause, and sexual health<br>- Offers regenerative treatments including Morpheus8, EmSculpt Neo, PRP microneedling, and Forma V vaginal rejuvenation<br>- Functional medicine focus on autoimmune diseases, cardiometabolic disorders, thyroid function, and insulin resistance with advanced diagnostic testing<br>- Team includes practitioners named Shauna, Liz, and Sara with multi-year patient retention and strong testimonials on care quality<br>- Additional services: medical weight loss with InBody scans, hair restoration, laser treatments, and teeth whitening</p></details></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">The Mint Facial Bar &amp; Med Spa</h3><div class="prospect-rating"><span class="star">★</span> 4.8 <span class="reviews">(376)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18013418968">(801) 341-8968</a><a class="prospect-site" href="https://mintfacialbar.com/" target="_blank" rel="noopener noreferrer">mintfacialbar.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Foothill Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(291)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18017840095">(801) 784-0095</a><a class="prospect-site" href="http://foothillwellnessutah.com/" target="_blank" rel="noopener noreferrer">foothillwellnessutah.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Fluent SkinSpa (formerly SkinBoss)</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(285)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18019609396">(801) 960-9396</a><a class="prospect-site" href="https://fluent.skin/" target="_blank" rel="noopener noreferrer">fluent.skin</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Hillside Health</h3><div class="prospect-rating"><span class="star">★</span> 4.8 <span class="reviews">(348)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14352568890">(435) 256-8890</a><a class="prospect-site" href="http://hillsidehealth.com/" target="_blank" rel="noopener noreferrer">hillsidehealth.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Shade of Beauty Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(275)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Layton, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18017109040">(801) 710-9040</a><a class="prospect-site" href="http://shadeofbeautyaesthetics.com/" target="_blank" rel="noopener noreferrer">shadeofbeautyaesthetics.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">The Vitamin Bar Medical Spa &amp; IV Therapy - Park City</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(274)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Park City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14356594914">(435) 659-4914</a><a class="prospect-site" href="https://www.thevitaminbariv.com/park-city-medical-spa" target="_blank" rel="noopener noreferrer">www.thevitaminbariv.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Salt Lake Dermatology and Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 4.8 <span class="reviews">(346)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18015215630">(801) 521-5630</a><a class="prospect-site" href="https://www.saltlakedermatology.com/" target="_blank" rel="noopener noreferrer">www.saltlakedermatology.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Alchemy Medical Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(271)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18016096516">(801) 609-6516</a><a class="prospect-site" href="https://www.alchemyslc.com/" target="_blank" rel="noopener noreferrer">www.alchemyslc.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">MaVie Med Spa</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(301)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14357036633">(435) 703-6633</a><a class="prospect-site" href="https://www.maviemedspa.com/" target="_blank" rel="noopener noreferrer">www.maviemedspa.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">FIKA Infusion + Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(261)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18019393335">(801) 939-3335</a><a class="prospect-site" href="https://fikainfusion.com/lehi-thanksgiving-point/" target="_blank" rel="noopener noreferrer">fikainfusion.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Refined Aesthetics and Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(261)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Logan, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14352160329">(435) 216-0329</a><a class="prospect-site" href="https://refinedlogan.com/" target="_blank" rel="noopener noreferrer">refinedlogan.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Ogden Wellness Center</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(285)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Ogden, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18016121085">(801) 612-1085</a><a class="prospect-site" href="https://www.ogdenwellnesscenter.com/" target="_blank" rel="noopener noreferrer">www.ogdenwellnesscenter.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Marybeth Wilson, Registered general nurse</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(229)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Logan, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14352653008">(435) 265-3008</a><a class="prospect-site" href="http://www.loganobgyn.com/" target="_blank" rel="noopener noreferrer">www.loganobgyn.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Mad Skin</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(251)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13853368380">(385) 336-8380</a><a class="prospect-site" href="https://madskinaesthetics.com/" target="_blank" rel="noopener noreferrer">madskinaesthetics.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Haus of Aesthetics Provo</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(237)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18018520033">(801) 852-0033</a><a class="prospect-site" href="https://hausofaesthetics.com/provo/" target="_blank" rel="noopener noreferrer">hausofaesthetics.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Align Rehabilitation &amp; Wellness Center</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(236)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18012359944">(801) 235-9944</a><a class="prospect-site" href="http://alignrehab.com/" target="_blank" rel="noopener noreferrer">alignrehab.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">St George iV</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(195)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14353571146">(435) 357-1146</a><a class="prospect-site" href="https://www.stgeorgeiv.com/" target="_blank" rel="noopener noreferrer">www.stgeorgeiv.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Viso Bespoke Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(193)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18015580870">(801) 558-0870</a><a class="prospect-site" href="https://www.visoslc.com/?utm_source=google&amp;utm_medium=organic&amp;utm_campaign=gbp&amp;utm_content=website%20click" target="_blank" rel="noopener noreferrer">www.visoslc.com</a></div><details class="prospect-tp"><summary>Talking points</summary><p>Salt Lake City medical spa offering Botox, dermal fillers, PDO threads, and Skinvive with 20+ years of aesthetics expertise focused on natural results.<br><br>- Offers PDO threads for skin tightening, lifting, and collagen production at cellular level<br>- Carries Skinvive injectable and Juvederm products<br>- Provider Inna brings 20+ years of aesthetics experience<br>- Located at 444 South 900 East, Suite 102, Salt Lake City with Wed-Fri hours 9am-4pm<br>- Features before/after gallery demonstrating injectables and thread lift results</p></details></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Piper Rose Med Spa</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(173)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13854500279">(385) 450-0279</a><a class="prospect-site" href="https://piperrosemedspa.com/" target="_blank" rel="noopener noreferrer">piperrosemedspa.com</a></div><details class="prospect-tp"><summary>Talking points</summary><p>Medical spa offering personalized skin treatments, weight loss and hormone therapy, laser hair removal, acne care, and men&#x27;s health services with experienced estheticians and nurse practitioner.<br><br>- New ownership special: 10% off any new-to-you treatment; first-time clients get 20% off with code NEW20<br>- Offers GLP-1 weight loss therapy starting at $199/month with comprehensive labs and Nurse Practitioner evaluation ($550 initial consultation)<br>- Award-winning acne treatment; testimonials highlight successful cases where dermatologists failed<br>- Comprehensive service menu includes HydraFacial, microneedling, IV therapy, and bikini/Brazilian waxing with named staff expertise<br>- Anti-aging package at $325 bundles microdermabrasion, chemical peel, and microneedling treatments</p></details></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Identity Hormones and Healthcare</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(186)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18019463399">(801) 946-3399</a><a class="prospect-site" href="https://identityhormones.com/" target="_blank" rel="noopener noreferrer">identityhormones.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Pure Infusion of Layton</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(184)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Layton, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13853821440">(385) 382-1440</a><a class="prospect-site" href="https://pureinfusion.com/locations/infusion-center-layton/" target="_blank" rel="noopener noreferrer">pureinfusion.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Avanti Medical Center</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(183)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18016917748">(801) 691-7748</a><a class="prospect-site" href="https://avantimedicalcenter.com/" target="_blank" rel="noopener noreferrer">avantimedicalcenter.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Align Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(159)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Logan, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14355623133">(435) 562-3133</a><a class="prospect-site" href="https://mysite.vagaro.com/alignaestheticsco" target="_blank" rel="noopener noreferrer">mysite.vagaro.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Valley Aesthetics &amp; Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(157)</span></div><div class="prospect-meta-row"><span class="prospect-loc">North Logan, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14359999589">(435) 999-9589</a><a class="prospect-site" href="https://www.valleyaestheticsmedspa.com/" target="_blank" rel="noopener noreferrer">www.valleyaestheticsmedspa.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Rocky Mountain Infusion Center</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(169)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18014085700">(801) 408-5700</a><a class="prospect-site" href="https://www.rockymountainmsclinic.com/locations/salt-lake-city-infusion-center" target="_blank" rel="noopener noreferrer">www.rockymountainmsclinic.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">LiveWell IV</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(145)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18019801001">(801) 980-1001</a><a class="prospect-site" href="http://www.livewelliv.com/" target="_blank" rel="noopener noreferrer">www.livewelliv.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Revity Medical</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(158)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13855032403">(385) 503-2403</a><a class="prospect-site" href="https://revitymedical.com/" target="_blank" rel="noopener noreferrer">revitymedical.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Method Aesthetics &amp; Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(141)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14355998104">(435) 599-8104</a><a class="prospect-site" href="http://methodaesthetics.com/" target="_blank" rel="noopener noreferrer">methodaesthetics.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Bella Derma</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(155)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Logan, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14359320152">(435) 932-0152</a><a class="prospect-site" href="http://belladermalogan.com/" target="_blank" rel="noopener noreferrer">belladermalogan.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Lotus Luxury Spa and Wellness</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(153)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Logan, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14352139152">(435) 213-9152</a><a class="prospect-site" href="https://www.lotusluxuryspaandwellness.com/" target="_blank" rel="noopener noreferrer">www.lotusluxuryspaandwellness.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">K2 Aesthetics and Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(135)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14352387300">(435) 238-7300</a><a class="prospect-site" href="https://www.k2medspa.com/" target="_blank" rel="noopener noreferrer">www.k2medspa.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Iron IV</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(135)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14352184737">(435) 218-4737</a><a class="prospect-site" href="https://www.ironiv.com/" target="_blank" rel="noopener noreferrer">www.ironiv.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Sundance Physical Therapy</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(133)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Ogden, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18016267712">(801) 626-7712</a><a class="prospect-site" href="http://sundance-pt.com/" target="_blank" rel="noopener noreferrer">sundance-pt.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Stronglife Physiotherapy</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(147)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13852363065">(385) 236-3065</a><a class="prospect-site" href="http://www.stronglifept.com/" target="_blank" rel="noopener noreferrer">www.stronglifept.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Aura Spa Collaborative</h3><div class="prospect-rating"><span class="star">★</span> 4.8 <span class="reviews">(158)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Park City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14356582872">(435) 658-2872</a><a class="prospect-site" href="https://www.auraspacollaborative.com/" target="_blank" rel="noopener noreferrer">www.auraspacollaborative.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Avara Medical</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(127)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18019998356">(801) 999-8356</a><a class="prospect-site" href="https://www.avaramedical.com/" target="_blank" rel="noopener noreferrer">www.avaramedical.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">TruHealth Physical Therapy &amp; Wellness</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(140)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18019393535">(801) 939-3535</a><a class="prospect-site" href="http://www.truhealthutah.com/" target="_blank" rel="noopener noreferrer">www.truhealthutah.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">ChroniCare of Utah, L.L.C</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(139)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Layton, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18017763200">(801) 776-3200</a><a class="prospect-site" href="https://ccofutah.com/" target="_blank" rel="noopener noreferrer">ccofutah.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Level Up Wellness</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(125)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14359220511">(435) 922-0511</a><a class="prospect-site" href="https://levelup-utah.com/" target="_blank" rel="noopener noreferrer">levelup-utah.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Utah Valley Medical Spa</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(136)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18017688800">(801) 768-8800</a><a class="prospect-site" href="https://uvderm.com/medical-spa/" target="_blank" rel="noopener noreferrer">uvderm.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Copper Rock Clinic</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(135)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14359001210">(435) 900-1210</a><a class="prospect-site" href="https://www.copperrockclinic.com/" target="_blank" rel="noopener noreferrer">www.copperrockclinic.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Pure Infusion of St George</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(120)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14355234040">(435) 523-4040</a><a class="prospect-site" href="https://pureinfusion.com/locations/infusion-center-st-george/" target="_blank" rel="noopener noreferrer">pureinfusion.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Carissa Earl, PA-C | Family Medicine</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(132)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Lehi, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+13852031215">(385) 203-1215</a><a class="prospect-site" href="https://reverehealth.com/doctors/carissa-earl-pa-c/" target="_blank" rel="noopener noreferrer">reverehealth.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Barr Aesthetics</h3><div class="prospect-rating"><span class="star">★</span> 4.7 <span class="reviews">(159)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18015320204">(801) 532-0204</a><a class="prospect-site" href="http://barraesthetics.com/" target="_blank" rel="noopener noreferrer">barraesthetics.com</a></div><details class="prospect-tp"><summary>Talking points</summary><p>Utah medical spa and surgical practice led by Dr. Lucy Barr, first female board-certified facial plastic surgeon in the state. Offers surgical and non-surgical facial procedures, hair restoration, and skin treatments.<br><br>- Dr. Lucy Barr is the first board-certified female facial plastic surgeon in Utah, specializing in facial, neck, and hair procedures<br>- Comprehensive hair restoration services including FUE/FUT transplants, scalp micropigmentation, PRP therapy, and low-level light therapy<br>- Advanced skin treatment technologies: CO2 laser resurfacing, Morpheus8, Emsculpt Neo, Venus Viva, and V-Beam laser<br>- Located in Salt Lake City (24 South 1100 East, Suite 102) with integrated wellness spa offering clinical facials and Alastin product retail<br>- Full surgical facial plastic surgery menu including rhinoplasty, facelifts, brow/eyelid lifts, and scar revision alongside injectables and laser treatments</p></details></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">BosBeauty</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(129)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14353130847">(435) 313-0847</a><a class="prospect-site" href="https://www.bosbeauty.com/" target="_blank" rel="noopener noreferrer">www.bosbeauty.com</a></div></li>
+      <li class="prospect" data-spec="aesthetic"><h3 class="prospect-name">Advanced Aesthetics Academy &amp; Spa</h3><div class="prospect-rating"><span class="star">★</span> 5.0 <span class="reviews">(115)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Layton, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">aesthetic</span></div><div class="prospect-actions"><span class="prospect-phone">no phone</span><a class="prospect-site" href="https://advancedaestheticsacademyandspa.com/" target="_blank" rel="noopener noreferrer">advancedaestheticsacademyandspa.com</a></div></li>
+      <li class="prospect" data-spec="longevity"><h3 class="prospect-name">Utah Natural Medicine</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(121)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Salt Lake City, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">longevity</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18013638824">(801) 363-8824</a><a class="prospect-site" href="https://www.utahnaturalmedicine.com/" target="_blank" rel="noopener noreferrer">www.utahnaturalmedicine.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Desert Bloom Healthcare</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(121)</span></div><div class="prospect-meta-row"><span class="prospect-loc">St. George, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+14357733232">(435) 773-3232</a><a class="prospect-site" href="https://desertbloomhealthcare.com/" target="_blank" rel="noopener noreferrer">desertbloomhealthcare.com</a></div></li>
+      <li class="prospect" data-spec="mixed"><h3 class="prospect-name">Xage Medical Spa</h3><div class="prospect-rating"><span class="star">★</span> 4.9 <span class="reviews">(115)</span></div><div class="prospect-meta-row"><span class="prospect-loc">Provo, Utah</span><span class="dot" aria-hidden="true">·</span><span class="prospect-spec">mixed</span></div><div class="prospect-actions"><a class="prospect-phone" href="tel:+18013733376">(801) 373-3376</a><a class="prospect-site" href="https://xagemedicalspa.com/" target="_blank" rel="noopener noreferrer">xagemedicalspa.com</a></div></li>
+    </ol>
+
+    <p class="prospect-empty" id="prospect-empty" hidden>No prospects match that filter.</p>
+
+    <div class="prospect-footer">
+      <span>Showing <strong id="prospect-shown-count">60</strong> of <strong>60</strong>. Updated <strong>2026-05-27</strong>.</span>
+      <a href="https://airtable.com/appN1lPYk0ptB83Y6/tblEtv16e0VLBk3lV" target="_blank" rel="noopener noreferrer" class="prospect-fulllink">Open full Airtable list ↗</a>
+    </div>
+  </section>
+
+  <!-- 4. SCRIPT -->
+  <section id="section-script" aria-labelledby="h-script">
+    <div class="section-header">
+      <div class="section-num">04</div>
       <h2 class="section-title" id="h-script">Your Script</h2>
     </div>
 
@@ -787,10 +1052,10 @@
     </div>
   </section>
 
-  <!-- 4. OBJECTIONS -->
+  <!-- 5. OBJECTIONS -->
   <section id="section-objections" aria-labelledby="h-obj">
     <div class="section-header">
-      <div class="section-num">04</div>
+      <div class="section-num">05</div>
       <h2 class="section-title" id="h-obj">Objections and Responses</h2>
     </div>
 
@@ -867,10 +1132,10 @@
     </div>
   </section>
 
-  <!-- 5. CALL FLOW -->
+  <!-- 6. CALL FLOW -->
   <section id="section-flow" aria-labelledby="h-flow">
     <div class="section-header">
-      <div class="section-num">05</div>
+      <div class="section-num">06</div>
       <h2 class="section-title" id="h-flow">What to Log After Each Call</h2>
     </div>
 
@@ -910,10 +1175,10 @@
     </ol>
   </section>
 
-  <!-- 6. KEY RULES -->
+  <!-- 7. KEY RULES -->
   <section id="section-rules" aria-labelledby="h-rules">
     <div class="section-header">
-      <div class="section-num">06</div>
+      <div class="section-num">07</div>
       <h2 class="section-title" id="h-rules">Rules to Remember</h2>
     </div>
 
@@ -1008,6 +1273,30 @@
       a.addEventListener('click', function () {
         var id = a.getAttribute('href').slice(1);
         setActive(id);
+      });
+    });
+  })();
+
+  // Prospect specialty filter
+  (function () {
+    var pills = Array.prototype.slice.call(document.querySelectorAll('.filter-pill'));
+    var items = Array.prototype.slice.call(document.querySelectorAll('.prospect'));
+    var countEl = document.getElementById('prospect-shown-count');
+    var emptyEl = document.getElementById('prospect-empty');
+    if (!pills.length || !items.length) return;
+
+    pills.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var spec = btn.dataset.spec;
+        pills.forEach(function (p) { p.setAttribute('aria-pressed', p === btn ? 'true' : 'false'); });
+        var shown = 0;
+        items.forEach(function (li) {
+          var match = spec === 'all' || li.dataset.spec === spec;
+          li.hidden = !match;
+          if (match) shown++;
+        });
+        if (countEl) countEl.textContent = shown;
+        if (emptyEl) emptyEl.hidden = shown !== 0;
       });
     });
   })();
