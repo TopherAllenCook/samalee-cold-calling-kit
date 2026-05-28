@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samalee, VerveMD Cold Calling Kit</title>
+<style>
+  :root {
+    /* Palette (OKLCH) */
+    --bg:           oklch(0.985 0.004 85);
+    --surface:      oklch(1.000 0.002 85);
+    --surface-2:    oklch(0.970 0.005 85);   /* row hover, trigger row bg */
+    --border:       oklch(0.910 0.005 85);
+    --border-2:     oklch(0.840 0.006 85);
+    --text:         oklch(0.205 0.006 70);
+    --muted:        oklch(0.480 0.005 70);
+    --muted-strong: oklch(0.380 0.005 70);   /* used to be the too-light --muted2 */
+
+    /* Cover (dark) */
+    --cover-bg:     var(--text);
+    --cover-text:   oklch(0.930 0.008 80);
+    --cover-val:    oklch(0.850 0.008 80);
+    --cover-sub:    oklch(0.700 0.006 80);
+    --cover-label:  oklch(0.660 0.006 80);
+    --cover-rule:   oklch(0.250 0.006 70);
+
+    /* Semantic */
+    --accent:       oklch(0.580 0.130 38);   /* terracotta */
+    --accent-soft:  oklch(0.580 0.130 38 / 0.10);
+    --green:        oklch(0.490 0.100 155);
+    --green-soft:   oklch(0.490 0.100 155 / 0.10);
+    --blue:         oklch(0.450 0.130 255);
+    --blue-soft:    oklch(0.450 0.130 255 / 0.10);
+    --warn:         oklch(0.480 0.090 75);
+    --warn-soft:    oklch(0.480 0.090 75 / 0.13);
+    --red:          oklch(0.530 0.155 25);
+    --red-soft:     oklch(0.530 0.155 25 / 0.10);
+
+    /* Type */
+    --font-serif: 'Iowan Old Style', 'Georgia', 'Times New Roman', serif;
+    --font-sans:  system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:  'SF Mono', 'Courier New', monospace;
+
+    /* Rhythm */
+    --pad-side: 64px;
+    --pad-side-sm: 24px;
+  }
+
+  *,
+  *::before,
+  *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.6; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------- COVER ---------- */
+  .cover {
+    background: var(--cover-bg);
+    color: var(--cover-text);
+    padding: 56px var(--pad-side);
+  }
+  .cover-brand {
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+  .cover-title {
+    font-family: var(--font-serif);
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -.015em;
+    margin: 0;
+  }
+  .cover-title em {
+    font-style: normal;
+    color: var(--cover-val);
+  }
+  .cover-sub {
+    font-size: 14px;
+    color: var(--cover-sub);
+    margin-top: 14px;
+    max-width: 58ch;
+  }
+  .cover-for {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--cover-rule);
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 48px;
+    row-gap: 22px;
+  }
+  .cover-field { display: flex; flex-direction: column; gap: 4px; }
+  .cover-label {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--cover-label);
+  }
+  .cover-val { font-size: 13px; color: var(--cover-val); }
+
+  /* ---------- NAV ---------- */
+  .toc {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 var(--pad-side);
+    display: flex;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    scrollbar-width: none;
+  }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc-item {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s ease, border-color .15s ease;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .toc-item:hover { color: var(--text); }
+  .toc-item[aria-current="true"] {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ---------- CONTENT ---------- */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px var(--pad-side) 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  section { display: flex; flex-direction: column; gap: 22px; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--text);
+  }
+  .section-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -.005em;
+  }
+
+  /* ---------- NOTE (typographic, no box, no side-stripe) ---------- */
+  .note {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 0 2px;
+  }
+  .note-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .note-body {
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 68ch;
+  }
+  .note.accent .note-eyebrow { color: var(--accent); }
+  .note.green  .note-eyebrow { color: var(--green); }
+  .note.blue   .note-eyebrow { color: var(--blue); }
+
+  /* The lead "one line" gets visual weight via type, not a box */
+  .lead-line {
+    padding: 4px 0 4px;
+  }
+  .lead-line .lead-text {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.35;
+    color: var(--text);
+    max-width: 28ch;
+  }
+
+  /* Warn note keeps a tinted background as the only intentional box.
+     No border, no side-stripe. */
+  .note.warn {
+    background: var(--warn-soft);
+    padding: 16px 20px;
+    border-radius: 4px;
+  }
+  .note.warn .note-eyebrow { color: var(--warn); }
+
+  /* ---------- BODY COPY ---------- */
+  .prose {
+    font-size: 14px;
+    line-height: 1.75;
+    max-width: 68ch;
+  }
+  .prose strong { font-weight: 600; }
+  .prose em { color: var(--muted-strong); }
+
+  /* ---------- SCRIPT BLOCK ---------- */
+  .script-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .script-header {
+    background: var(--text);
+    color: var(--cover-text);
+    padding: 12px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .script-header-sub {
+    font-size: 10px;
+    color: var(--cover-sub);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .script-body {
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .script-line {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .script-role {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted-strong);
+    width: 56px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .script-role.you { color: var(--accent); }
+  .script-role.them { color: var(--blue); }
+  .script-role.note { color: var(--green); }
+  .script-text { font-size: 14.5px; line-height: 1.65; flex: 1; }
+  .script-tag {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    flex: 1;
+    line-height: 1.55;
+  }
+
+  /* ---------- OBJECTION / RULE CARDS ---------- */
+  .row-grid { display: flex; flex-direction: column; gap: 10px; }
+  .row-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .row-trigger {
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .row-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted-strong);
+  }
+  .row-body {
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .row-foot {
+    padding: 4px 18px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Rule variants for section 6 */
+  .row-card.always .row-trigger { background: var(--green-soft); }
+  .row-card.always .row-tag    { color: var(--green); }
+  .row-card.never  .row-trigger { background: var(--red-soft); }
+  .row-card.never  .row-tag    { color: var(--red); }
+
+  /* ---------- ICP TABLE ---------- */
+  .icp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .icp-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted-strong);
+    border-bottom: 1px solid var(--border-2);
+  }
+  .icp-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .icp-table tr:last-child td { border-bottom: none; }
+  .icp-table tr:hover td { background: var(--surface-2); }
+  .icp-table .icp-sub {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Mobile: stack ICP table as labeled rows */
+  .icp-stack { display: none; }
+
+  /* ---------- KEY FACTS ---------- */
+  .key-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .fact {
+    padding: 4px 0;
+  }
+  .fact-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .fact-value {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    max-width: 42ch;
+  }
+
+  /* ---------- STEP LIST ---------- */
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+  }
+  .step {
+    display: flex;
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    counter-increment: step;
+  }
+  .step:last-child { border-bottom: none; }
+  .step::before {
+    content: counter(step);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--cover-text);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-body { flex: 1; }
+  .step-title { font-weight: 600; font-size: 14.5px; margin-bottom: 4px; }
+  .step-desc { font-size: 13.5px; color: var(--muted-strong); line-height: 1.6; }
+
+  /* ---------- PILL ---------- */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill.green { background: var(--green-soft); color: var(--green); }
+  .pill.accent { background: var(--accent-soft); color: var(--accent); }
+  .pill.red { background: var(--red-soft); color: var(--red); }
+
+  /* ---------- FOOTER NOTE ---------- */
+  .signoff {
+    margin-top: 8px;
+    padding: 22px 0 4px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    max-width: 62ch;
+  }
+  .signoff strong { font-weight: 600; }
+
+  /* ---------- PRINT ---------- */
+  @media print {
+    .toc { display: none; }
+    .cover { page-break-after: always; }
+    section { page-break-inside: avoid; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 700px) {
+    :root { --pad-side: var(--pad-side-sm); }
+    .cover { padding: 40px var(--pad-side-sm); }
+    .cover-title { font-size: 30px; }
+    .cover-for { column-gap: 28px; row-gap: 18px; }
+    main { padding: 36px var(--pad-side-sm) 64px; gap: 44px; }
+    .section-title { font-size: 22px; }
+    .lead-line .lead-text { font-size: 19px; }
+    .key-facts { grid-template-columns: 1fr; }
+
+    /* Stack ICP table */
+    .icp-table { display: none; }
+    .icp-stack { display: flex; flex-direction: column; gap: 14px; }
+    .icp-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .icp-row-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .icp-row-name { font-size: 14.5px; font-weight: 600; line-height: 1.3; }
+    .icp-row-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .icp-row-fit { font-size: 13px; color: var(--text); line-height: 1.55; }
+
+    .script-role { width: 48px; font-size: 9.5px; }
+    .script-text { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<header class="cover">
+  <div class="cover-brand">VerveMD</div>
+  <h1 class="cover-title">Cold Calling Kit<br><em>Samalee's Guide</em></h1>
+  <p class="cover-sub">Scripts, objection responses, and ICP reference for physician outreach.</p>
+  <div class="cover-for">
+    <div class="cover-field">
+      <div class="cover-label">Prepared for</div>
+      <div class="cover-val">Samalee Mendoza</div>
+    </div>
+    <div class="cover-field">
+      <div class="cover-label">Business</div>
+      <div class="cover-val">VerveMD</div>
+    </div>
+    <div class="cover-field">
+      <div class="cover-label">Goal on every call</div>
+      <div class="cover-val">Book a free audit, not a sales call</div>
+    </div>
+    <div class="cover-field">
+      <div class="cover-label">Prepared by</div>
+      <div class="cover-val">Chris Cook</div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="toc" id="toc" aria-label="Sections">
+  <a class="toc-item" href="#section-what" aria-current="true">What We Sell</a>
+  <a class="toc-item" href="#section-who">Who to Call</a>
+  <a class="toc-item" href="#section-script">Your Script</a>
+  <a class="toc-item" href="#section-objections">Objections</a>
+  <a class="toc-item" href="#section-flow">Call Flow</a>
+  <a class="toc-item" href="#section-rules">Key Rules</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- 1. WHAT WE SELL -->
+  <section id="section-what" aria-labelledby="h-what">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <h2 class="section-title" id="h-what">What VerveMD Does</h2>
+    </div>
+
+    <div class="note accent lead-line">
+      <div class="note-eyebrow">The one line</div>
+      <p class="lead-text">We get AI-invisible clinics visible, and we make sure every inquiry that starts coming in actually converts.</p>
+    </div>
+
+    <p class="prose">VerveMD is a marketing agency that works specifically with <strong>longevity, concierge, and aesthetic medicine practices</strong>. We solve two problems.</p>
+
+    <div class="key-facts">
+      <div class="fact">
+        <div class="fact-label">Problem 1 &nbsp;·&nbsp; AI Visibility</div>
+        <div class="fact-value">When patients ask ChatGPT or Perplexity "who's the best longevity doctor in Austin," three practices show up and everyone else is invisible. Most practices have no idea this is happening. We fix that.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">Problem 2 &nbsp;·&nbsp; Inquiry Capture</div>
+        <div class="fact-value">Inquiries come in after hours and nobody responds fast enough. Leads go cold. We set up AI-powered systems that answer, qualify, and book, even at midnight.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">The Offer</div>
+        <div class="fact-value">We start every relationship with a free AI Visibility Audit. No pitch. Just a real look at where the practice stands in AI search. That's what you're booking on each call.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">Your Job on the Call</div>
+        <div class="fact-value">You are not selling anything. You are booking a free audit, or getting the website URL and city so Chris can run the audit. That's the only goal. No pricing, no demos.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. WHO TO CALL -->
+  <section id="section-who" aria-labelledby="h-who">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <h2 class="section-title" id="h-who">Who to Call</h2>
+    </div>
+
+    <div class="note blue">
+      <div class="note-eyebrow">Target Profile</div>
+      <p class="note-body">Private-pay medical practices with $1M+ revenue. Not insurance-heavy primary care. Not large hospital groups. Specifically: practices where the doctor is the brand and patients choose them intentionally.</p>
+    </div>
+
+    <table class="icp-table">
+      <thead>
+        <tr>
+          <th scope="col">Specialty</th>
+          <th scope="col">Why They're a Fit</th>
+          <th scope="col">Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Longevity Medicine</strong>
+            <span class="icp-sub">Anti-aging, NAD+, hormone optimization, lifespan clinics</span>
+          </td>
+          <td>Fast-growing category, high net worth patients, almost no AI visibility yet.</td>
+          <td><span class="pill green">Highest</span></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Concierge Medicine</strong>
+            <span class="icp-sub">Direct primary care, membership model, retainer practices</span>
+          </td>
+          <td>Patients actively searching online, referral-dependent but expanding.</td>
+          <td><span class="pill green">Highest</span></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Aesthetic Medicine</strong>
+            <span class="icp-sub">Med spas, cosmetic dermatology, plastic surgery, injectables</span>
+          </td>
+          <td>High-value patients, very search-active, strong AI visibility gap.</td>
+          <td><span class="pill accent">High</span></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Functional Medicine</strong>
+            <span class="icp-sub">Root-cause, integrative, gut health, autoimmune specialists</span>
+          </td>
+          <td>Good fit if private-pay and $1M+. Less ideal if small solo practice.</td>
+          <td><span class="pill accent">Medium</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Mobile-only stacked version of the ICP table -->
+    <div class="icp-stack" aria-hidden="true">
+      <div class="icp-row">
+        <div class="icp-row-head">
+          <div>
+            <div class="icp-row-name">Longevity Medicine</div>
+            <div class="icp-row-sub">Anti-aging, NAD+, hormone optimization, lifespan clinics</div>
+          </div>
+          <span class="pill green">Highest</span>
+        </div>
+        <div class="icp-row-fit">Fast-growing category, high net worth patients, almost no AI visibility yet.</div>
+      </div>
+      <div class="icp-row">
+        <div class="icp-row-head">
+          <div>
+            <div class="icp-row-name">Concierge Medicine</div>
+            <div class="icp-row-sub">Direct primary care, membership model, retainer practices</div>
+          </div>
+          <span class="pill green">Highest</span>
+        </div>
+        <div class="icp-row-fit">Patients actively searching online, referral-dependent but expanding.</div>
+      </div>
+      <div class="icp-row">
+        <div class="icp-row-head">
+          <div>
+            <div class="icp-row-name">Aesthetic Medicine</div>
+            <div class="icp-row-sub">Med spas, cosmetic dermatology, plastic surgery, injectables</div>
+          </div>
+          <span class="pill accent">High</span>
+        </div>
+        <div class="icp-row-fit">High-value patients, very search-active, strong AI visibility gap.</div>
+      </div>
+      <div class="icp-row">
+        <div class="icp-row-head">
+          <div>
+            <div class="icp-row-name">Functional Medicine</div>
+            <div class="icp-row-sub">Root-cause, integrative, gut health, autoimmune specialists</div>
+          </div>
+          <span class="pill accent">Medium</span>
+        </div>
+        <div class="icp-row-fit">Good fit if private-pay and $1M+. Less ideal if small solo practice.</div>
+      </div>
+    </div>
+
+    <div class="note warn">
+      <div class="note-eyebrow">Do NOT call</div>
+      <p class="note-body">Large hospital groups. Insurance-based primary care. Urgent care chains. Practices that are clearly tiny one-person operations. If it feels like a medical office with 10 people in the waiting room and accepts Medicaid, skip it.</p>
+    </div>
+
+    <p class="prose"><strong>How to find the right person to ask for.</strong> You usually reach a front desk person or office manager first. Ask for whoever handles marketing decisions. That's usually the practice owner, the physician, or an office manager with that authority. Ask: <em>"Who handles your marketing and business development?"</em></p>
+  </section>
+
+  <!-- 3. SCRIPT -->
+  <section id="section-script" aria-labelledby="h-script">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <h2 class="section-title" id="h-script">Your Script</h2>
+    </div>
+
+    <div class="note green">
+      <div class="note-eyebrow">Before you dial</div>
+      <p class="note-body">Know the practice name, the doctor's name if possible, the specialty, and the city. That's it. You don't need to research deeply. The script is designed to work cold.</p>
+    </div>
+
+    <!-- GATEKEEPER -->
+    <div class="script-block">
+      <div class="script-header">
+        <span>Step 1 · Getting Past the Front Desk</span>
+        <span class="script-header-sub">Use when a receptionist or staff member answers</span>
+      </div>
+      <div class="script-body">
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"Hey, how are you doing today?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role note">Note</div>
+          <div class="script-tag">Wait for a response. Be warm, not rushed. One second of genuine interaction matters.</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"I'm calling on behalf of Chris Cook over at VerveMD. He works specifically with longevity and concierge practices on AI search visibility. Who would be the right person to connect with about the practice's marketing?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role them">Them</div>
+          <div class="script-text">[They give you a name or transfer you, or say "that's the doctor" / "that's Dr. ___"]</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"Great, is [name] available for just a quick moment?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role note">Note</div>
+          <div class="script-tag">If they say the doctor is with a patient or unavailable, ask: "No problem. What's the best time to reach them?" and note it down. Don't leave a generic voicemail unless you have to.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN SCRIPT -->
+    <div class="script-block">
+      <div class="script-header">
+        <span>Step 2 · The Main Call (Decision Maker)</span>
+        <span class="script-header-sub">Use when you reach the doctor, owner, or office manager</span>
+      </div>
+      <div class="script-body">
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"Hey [name], how are you doing today?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role note">Note</div>
+          <div class="script-tag">Wait. Let them respond. Don't rush into the pitch.</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"I'll be quick. I'm calling on behalf of Chris Cook at VerveMD. We work specifically with longevity and concierge practices. Quick question. Do you know if your practice shows up when someone searches for [their specialty] in [their city] on ChatGPT or Perplexity?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role note">Note</div>
+          <div class="script-tag">This is the key question. Most people will say "no" or "I have no idea." That's the door. Stay quiet for a moment after you ask it. Let the question land.</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role them">Them</div>
+          <div class="script-text">"No, I'm not sure." / "I don't think so." / "What do you mean?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"That's exactly why I'm calling. Most practices in your category aren't showing up there yet, and three practices end up dominating any given market in AI search. It shifts fast. Chris does a free AI Visibility Audit. It shows exactly where your practice stands, takes a day to turn around, no obligation. Would it make sense to get that in front of you?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role them">Them</div>
+          <div class="script-text">[If yes] "Sure, okay." / "What do you need?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"Perfect. I just need your practice website URL and the city you primarily serve. Chris will run the audit and send it over directly. What's the best email to send it to?"</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role note">Note</div>
+          <div class="script-tag">Get: website URL, primary city, best email. That's a win. Log it and pass to Chris.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOICEMAIL -->
+    <div class="script-block">
+      <div class="script-header">
+        <span>Voicemail Script</span>
+        <span class="script-header-sub">Use only if you've tried twice and can't reach anyone live</span>
+      </div>
+      <div class="script-body">
+        <div class="script-line">
+          <div class="script-role you">You</div>
+          <div class="script-text">"Hi, this is Samalee calling on behalf of Chris Cook at VerveMD. We work specifically with longevity and concierge practices on AI search visibility, making sure practices show up when patients search on ChatGPT or Perplexity. If that's something worth a look, Chris does a free audit, no obligation. You can reach me at [your number] or email Chris directly at chris@vervemd.com. Thanks."</div>
+        </div>
+        <div class="script-line">
+          <div class="script-role note">Note</div>
+          <div class="script-tag">Keep it under 25 seconds. Don't sound like you're reading. Voicemails rarely convert. Focus energy on live conversations.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. OBJECTIONS -->
+  <section id="section-objections" aria-labelledby="h-obj">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <h2 class="section-title" id="h-obj">Objections and Responses</h2>
+    </div>
+
+    <div class="note accent">
+      <div class="note-eyebrow">Remember</div>
+      <p class="note-body">You are not selling anything. You are offering a free audit. Most objections soften quickly when you remind them of that. Your job is to keep the door open, not to win an argument.</p>
+    </div>
+
+    <div class="row-grid">
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "We already have a marketing company."
+        </div>
+        <div class="row-body">"Good. This is different. It's specifically about AI search, which is a separate problem from SEO or paid ads. Most agencies aren't tracking it yet. The audit just shows you what's there. Worth knowing either way."</div>
+        <div class="row-foot">Why it works: you're not attacking their current agency. You're filling a gap they probably don't know exists.</div>
+      </article>
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "Not interested."
+        </div>
+        <div class="row-body">"Understood. Can I ask, is it the timing or just not on the radar right now?" [If timing] "When would be better to follow up?" [If not a priority] "Got it. I'll make a note. Thanks for your time."</div>
+        <div class="row-foot">Why it works: distinguishes between a timing issue and a real no. A lot of "not interested" is really "not right now."</div>
+      </article>
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "Can you just send me some information?"
+        </div>
+        <div class="row-body">"I'd rather send the actual audit. It's specific to your practice and a lot more useful than a brochure. Chris just needs your website URL and the city you primarily serve. Can I grab those real quick?"</div>
+        <div class="row-foot">Why it works: redirects to the ask. The audit is the information, and it's personalized, which makes it harder to ignore.</div>
+      </article>
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "We're not looking to spend more on marketing."
+        </div>
+        <div class="row-body">"The audit is completely free. No obligation, no pitch. It just shows where you stand in AI search right now. You can decide what to do with the information. Would that be worth a look?"</div>
+        <div class="row-foot">Why it works: removes the cost objection entirely by leading with free.</div>
+      </article>
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "We're fully booked already."
+        </div>
+        <div class="row-body">"That's great. So it's more about keeping that consistent, right? AI search visibility is actually where that starts to matter most. It's the patients who are actively looking and don't have a referral yet. The audit just shows you what's happening there. Free to take a look."</div>
+        <div class="row-foot">Why it works: being booked doesn't mean the problem doesn't exist. It reframes to retention and consistency.</div>
+      </article>
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "Who are you again?" / "What company is this?"
+        </div>
+        <div class="row-body">"VerveMD. We work specifically with longevity and concierge practices on AI search visibility. Making sure practices show up when patients search on ChatGPT or Perplexity for their specialty in their market."</div>
+        <div class="row-foot">Why it works: clean, specific, re-orients without getting defensive.</div>
+      </article>
+
+      <article class="row-card">
+        <div class="row-trigger">
+          <span class="row-tag">They say</span>
+          "I need to talk to the doctor / owner first."
+        </div>
+        <div class="row-body">"Completely understand. What's the best way to get a note in front of them? Should I call back at a specific time, or is there an email I can send a quick summary to?"</div>
+        <div class="row-foot">Why it works: keeps momentum. Gets you a name, time, or email instead of a dead end.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 5. CALL FLOW -->
+  <section id="section-flow" aria-labelledby="h-flow">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <h2 class="section-title" id="h-flow">What to Log After Each Call</h2>
+    </div>
+
+    <p class="prose">After every call, even a hang-up, log these five things so Chris can track and follow up.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <div class="step-title">Practice name and phone number</div>
+          <div class="step-desc">The business name as it appears on their website or when they answer the phone.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <div class="step-title">Who you spoke to (or reached)</div>
+          <div class="step-desc">Name and role if they gave it: "front desk," "office manager Jane," "Dr. Patel directly."</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <div class="step-title">Outcome</div>
+          <div class="step-desc">One of: Audit requested (WIN, get website + email), Call back scheduled, Not interested, No answer, Left voicemail, Gatekeeper only.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <div class="step-title">If audit requested: website URL, city, best email</div>
+          <div class="step-desc">These three pieces are what Chris needs to run the audit. Grab all three before you hang up.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <div class="step-title">Any notes on objections or tone</div>
+          <div class="step-desc">"Friendly but busy," "said call back Friday," "already working with an SEO company," "seemed interested but deferred to doctor." Anything useful for follow-up.</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 6. KEY RULES -->
+  <section id="section-rules" aria-labelledby="h-rules">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <h2 class="section-title" id="h-rules">Rules to Remember</h2>
+    </div>
+
+    <div class="row-grid">
+      <article class="row-card always">
+        <div class="row-trigger">
+          <span class="row-tag">Always</span>
+          Lead with the free audit. Never a sales call.
+        </div>
+        <div class="row-body">Your CTA is always: "Chris does a free audit, no obligation." Never "can I schedule a call to pitch you." The audit is what you're booking.</div>
+      </article>
+      <article class="row-card always">
+        <div class="row-trigger">
+          <span class="row-tag">Always</span>
+          Ask the qualifying question every time.
+        </div>
+        <div class="row-body">"Do you know if your practice shows up on ChatGPT or Perplexity?" This is the hook. Ask it on every call. Most won't know the answer, and that creates the conversation.</div>
+      </article>
+      <article class="row-card never">
+        <div class="row-trigger">
+          <span class="row-tag">Never</span>
+          Quote pricing.
+        </div>
+        <div class="row-body">If they ask what it costs, say: "The audit is free. If it shows something worth addressing, Chris will walk through what that looks like, but he doesn't pitch until after the audit." That's it.</div>
+      </article>
+      <article class="row-card never">
+        <div class="row-trigger">
+          <span class="row-tag">Never</span>
+          Try to explain the full service.
+        </div>
+        <div class="row-body">You don't need to explain AEO, SEO, AI visibility, or the inquiry system in detail. The simpler it sounds, the better. "AI search visibility" is enough. Keep it short.</div>
+      </article>
+      <article class="row-card never">
+        <div class="row-trigger">
+          <span class="row-tag">Never</span>
+          Argue or push hard on a firm no.
+        </div>
+        <div class="row-body">If someone says no twice, thank them and move on. We're not grinding people. A graceful exit leaves the door open for a future call.</div>
+      </article>
+    </div>
+
+    <div class="note green">
+      <div class="note-eyebrow">The only metric that matters</div>
+      <p class="note-body">Audits requested per day. If you get two to three people to give you their website URL and email address, that's a great day. Volume matters. 20 to 30 dials a day is a realistic target once you're in a rhythm.</p>
+    </div>
+
+    <div class="signoff">
+      <strong>Questions or issues on a call?</strong> Reach Chris at <strong>chris@vervemd.com</strong> or text directly. If you hit an objection you're not sure how to handle, just note it and move on. We'll add it to this kit.
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc-item'));
+    var idToLink = {};
+    var sections = [];
+    links.forEach(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      idToLink[id] = a;
+      var el = document.getElementById(id);
+      if (el) sections.push(el);
+    });
+
+    function setActive(id) {
+      links.forEach(function (a) {
+        if (a === idToLink[id]) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        // Prefer the section whose top is closest to (but past) the scroll-padding offset
+        var visible = entries
+          .filter(function (e) { return e.isIntersecting; })
+          .sort(function (a, b) {
+            return a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top;
+          });
+        if (visible.length > 0) setActive(visible[0].target.id);
+      }, {
+        // Active when the section header crosses ~25% from top
+        rootMargin: '-72px 0px -65% 0px',
+        threshold: 0
+      });
+      sections.forEach(function (s) { io.observe(s); });
+    }
+
+    // Keep active state in sync when user clicks (smooth-scroll arrival can lag IO)
+    links.forEach(function (a) {
+      a.addEventListener('click', function () {
+        var id = a.getAttribute('href').slice(1);
+        setActive(id);
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
